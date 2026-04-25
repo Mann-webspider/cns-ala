@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Lab Activities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+      --space-12: 3rem; --space-16: 4rem; --radius-sm: 0.375rem; --radius-md: 0.5rem;
+      --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-full: 9999px;
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --color-bg: #f7f6f2; --color-surface: #f9f8f5; --color-surface-2: #fbfbf9;
+      --color-surface-offset: #f3f0ec; --color-border: #d4d1ca; --color-divider: #dcd9d5;
+      --color-text: #28251d; --color-text-muted: #6f6b63; --color-text-faint: #a7a29a;
+      --color-text-inverse: #f9f8f4; --color-primary: #01696f; --color-primary-hover: #0c4e54;
+      --color-primary-active: #0f3638; --color-primary-highlight: #cedcd8;
+      --color-success: #437a22; --color-error: #a12c7b; --color-warning: #da7101;
+      --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
+      --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
+      --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / 0.12);
+      --font-body: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+      --font-display: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+      --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d;
+      --color-surface-offset: #1d1c1a; --color-border: #393836; --color-divider: #262523;
+      --color-text: #cdccca; --color-text-muted: #9a9893; --color-text-faint: #696864;
+      --color-text-inverse: #141412; --color-primary: #4f98a3; --color-primary-hover: #227f8b;
+      --color-primary-active: #1a626b; --color-primary-highlight: #313b3b;
+      --color-success: #6daa45; --color-error: #d163a7; --color-warning: #fdab43;
+      --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.2); --shadow-md: 0 4px 12px oklch(0 0 0 / 0.3);
+      --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.4);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { color-scheme: dark; scroll-behavior: smooth; }
+    body {
+      min-height: 100dvh; font-family: var(--font-body); font-size: var(--text-base); line-height: 1.6;
+      background:
+        radial-gradient(circle at top right, color-mix(in oklab, var(--color-primary) 18%, transparent), transparent 28%),
+        linear-gradient(180deg, var(--color-bg), color-mix(in oklab, var(--color-bg) 82%, black));
+      color: var(--color-text);
+    }
+    img, svg { display: block; max-width: 100%; }
+    button, input, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; border-radius: var(--radius-md); transition: all var(--transition-interactive); }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+    .shell { max-width: 1240px; margin: 0 auto; padding: var(--space-6); }
+    .skip-link { position: absolute; left: -9999px; top: var(--space-4); background: var(--color-primary); color: white; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); z-index: 10; }
+    .skip-link:focus { left: var(--space-4); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) 0 var(--space-8); }
+    .brand { display: flex; align-items: center; gap: var(--space-3); }
+    .brand-mark { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 30%, white)); color: white; box-shadow: var(--shadow-md); }
+    .brand-copy strong { display: block; font-size: var(--text-sm); letter-spacing: 0.08em; text-transform: uppercase; }
+    .brand-copy span { color: var(--color-text-muted); font-size: var(--text-xs); }
+    .theme-toggle { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); background: color-mix(in oklab, var(--color-surface) 90%, transparent); backdrop-filter: blur(10px); }
+    .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: var(--space-8); align-items: stretch; margin-bottom: var(--space-8); }
+    .hero-card, .info-card, .panel, .result-card, .nav-card { background: color-mix(in oklab, var(--color-surface) 90%, transparent); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); border-radius: var(--radius-xl); box-shadow: var(--shadow-md); backdrop-filter: blur(14px); }
+    .hero-card { padding: var(--space-8); }
+    .eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary); background: color-mix(in oklab, var(--color-primary) 12%, transparent); border: 1px solid color-mix(in oklab, var(--color-primary) 30%, transparent); margin-bottom: var(--space-4); }
+    h1 { font-size: var(--text-xl); line-height: 1.06; letter-spacing: -0.03em; max-width: 14ch; margin-bottom: var(--space-4); }
+    .hero-card p { color: var(--color-text-muted); max-width: 62ch; }
+    .hero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-8); }
+    .metric { background: color-mix(in oklab, var(--color-surface-2) 96%, transparent); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); border-radius: var(--radius-lg); padding: var(--space-4); }
+    .metric span { display: block; color: var(--color-text-faint); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; }
+    .metric strong { display: block; margin-top: var(--space-2); font-size: var(--text-lg); }
+    .info-card { padding: var(--space-8); display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-6); background: linear-gradient(180deg, color-mix(in oklab, var(--color-primary) 14%, var(--color-surface)) 0%, var(--color-surface) 100%); }
+    .info-card .stack { display: grid; gap: var(--space-4); }
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .tag { padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); background: color-mix(in oklab, var(--color-bg) 78%, transparent); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); color: var(--color-text-muted); }
+    .nav-card { padding: var(--space-5); margin-bottom: var(--space-8); }
+    .nav-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-4); }
+    .nav-buttons { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+    .tab-btn { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 46px; padding: 0.85rem 1.05rem; background: transparent; color: var(--color-text); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); }
+    .tab-btn.active { background: var(--color-primary); color: white; border-color: transparent; }
+    .activity-section { display: none; }
+    .activity-section.active { display: block; }
+    .layout { display: grid; grid-template-columns: 1fr 0.92fr; gap: var(--space-8); align-items: start; }
+    .panel { padding: var(--space-6); }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-5); }
+    .section-head h2 { font-size: var(--text-lg); line-height: 1.15; }
+    .section-head p { color: var(--color-text-muted); font-size: var(--text-sm); }
+    .field { display: grid; gap: var(--space-2); margin-bottom: var(--space-5); }
+    .field label { font-size: var(--text-sm); font-weight: 600; display: flex; align-items: center; gap: var(--space-2); }
+    .field small { color: var(--color-text-muted); font-size: var(--text-xs); }
+    textarea, input[type="text"] {
+      width: 100%; border-radius: var(--radius-lg); padding: var(--space-4);
+      background: color-mix(in oklab, var(--color-surface-2) 92%, transparent);
+      border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent);
+      min-height: 130px; color: var(--color-text); resize: vertical;
+    }
+    input[type="text"] { min-height: auto; }
+    .inline-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+    .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5); }
+    .btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.9rem 1.1rem; font-size: var(--text-sm); font-weight: 600; min-height: 46px; }
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-secondary { background: transparent; color: var(--color-text); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); }
+    .btn-secondary:hover { background: color-mix(in oklab, var(--color-surface-offset) 90%, transparent); }
+    .btn-ghost { background: color-mix(in oklab, var(--color-primary) 10%, transparent); color: var(--color-primary); }
+    .btn-ghost:hover { background: color-mix(in oklab, var(--color-primary) 16%, transparent); }
+    .status { display: none; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-5); font-size: var(--text-sm); border: 1px solid transparent; }
+    .status.show { display: inline-flex; }
+    .status.success { background: color-mix(in oklab, var(--color-success) 16%, transparent); color: var(--color-success); border-color: color-mix(in oklab, var(--color-success) 32%, transparent); }
+    .status.error { background: color-mix(in oklab, var(--color-error) 16%, transparent); color: var(--color-error); border-color: color-mix(in oklab, var(--color-error) 30%, transparent); }
+    .status.info { background: color-mix(in oklab, var(--color-primary) 12%, transparent); color: var(--color-primary); border-color: color-mix(in oklab, var(--color-primary) 30%, transparent); }
+    .result-stack { display: grid; gap: var(--space-4); }
+    .result-card { padding: var(--space-5); }
+    .result-card h3 { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--space-3); }
+    .mono { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.7; word-break: break-word; color: var(--color-text); background: color-mix(in oklab, var(--color-bg) 76%, transparent); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 74px; }
+    .result-meta, .result-meta-3 { display: grid; gap: var(--space-4); }
+    .result-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .result-meta-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mini { font-size: var(--text-xs); color: var(--color-text-muted); }
+    .footnote { margin-top: var(--space-8); padding: var(--space-5); border-radius: var(--radius-xl); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); background: color-mix(in oklab, var(--color-surface) 84%, transparent); color: var(--color-text-muted); font-size: var(--text-sm); }
+    .pulse { position: relative; overflow: hidden; }
+    .pulse::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, transparent, color-mix(in oklab, white 18%, transparent), transparent); transform: translateX(-100%); animation: shimmer 1.4s ease; }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+    @media (max-width: 1040px) { .hero, .layout { grid-template-columns: 1fr; } .hero-grid, .result-meta, .result-meta-3, .inline-grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Crypto Lab brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12 12 4l8 8-8 8-8-8Z"></path>
+            <path d="M9.5 12h5"></path>
+            <path d="M12 9.5v5"></path>
+          </svg>
+        </div>
+        <div class="brand-copy">
+          <strong>Crypto Lab</strong>
+          <span>All Activities in One Website</span>
+        </div>
+      </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme">
+        <i data-lucide="moon-star"></i>
+      </button>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <article class="hero-card">
+          <div class="eyebrow"><i data-lucide="shield-check"></i> Web Crypto Activities</div>
+          <h1>Three cryptography activities, one interactive website.</h1>
+          <p>
+            Switch between Ala 1, Ala 2, and Ala 3 using the top buttons. Each section takes input from text fields and performs the activity on button click using JavaScript in the browser.
+          </p>
+          <div class="hero-grid">
+            <div class="metric"><span>Ala 1</span><strong>Digital Signature</strong></div>
+            <div class="metric"><span>Ala 2</span><strong>SHA Compare</strong></div>
+            <div class="metric"><span>Ala 3</span><strong>HMAC MAC</strong></div>
+          </div>
+        </article>
+        <aside class="info-card">
+          <div class="stack">
+            <div>
+              
+              <h2 style="font-size: var(--text-lg); margin-top: var(--space-2);">Name: mann Dalsaniya</h2>
+              <h2 style="font-size: var(--text-lg); margin-top: var(--space-2);">Enroll: 240905081001</h2>
+              <h2 style="font-size: var(--text-lg); margin-top: var(--space-2);">Class: B.Tech ICT 6th C</h2>
+              <h2 style="font-size: var(--text-lg); margin-top: var(--space-2);">Subject: Cryptography and network security</h2>
+            </div>
+            
+          </div>
+         
+        </aside>
+      </section>
+
+      <section class="nav-card">
+        <div class="nav-head">
+          <div>
+            <h2 style="font-size: var(--text-lg);">Choose Activity</h2>
+            <p class="mini">Buttons switch the interface between your three practical tasks.</p>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="tab-btn active" data-target="ala1"><i data-lucide="badge-check"></i> Ala 1</button>
+          <button class="tab-btn" data-target="ala2"><i data-lucide="hash"></i> Ala 2</button>
+          <button class="tab-btn" data-target="ala3"><i data-lucide="shield-ellipsis"></i> Ala 3</button>
+        </div>
+      </section>
+
+      <section id="ala1" class="activity-section active">
+        <div class="layout">
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Ala 1 — Digital Signature Verifier</h2>
+                <p>Generate RSA keys, hash the message, sign with the private key, and verify with the public key.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="messageInput"><i data-lucide="file-signature"></i> Message Input</label>
+              <textarea id="messageInput">Hello GMIU, this message is signed using RSA and SHA-256.</textarea>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="generateBtn"><i data-lucide="key-round"></i> Generate Keys</button>
+              <button class="btn btn-secondary" id="hashBtn"><i data-lucide="fingerprint"></i> Generate SHA-256 Hash</button>
+              <button class="btn btn-secondary" id="signBtn"><i data-lucide="pen-square"></i> Sign Message</button>
+              <button class="btn btn-primary" id="verifyBtn"><i data-lucide="badge-check"></i> Verify Signature</button>
+              <button class="btn btn-ghost" id="tamperBtn"><i data-lucide="triangle-alert"></i> Tamper Test</button>
+              <button class="btn btn-ghost" id="resetBtn"><i data-lucide="rotate-ccw"></i> Reset</button>
+            </div>
+            <div class="status info show" id="sigStatus"><i data-lucide="info"></i><span>Ready. Start by generating the RSA key pair.</span></div>
+            <div class="footnote">
+              Browser-native Web Crypto supports RSA key generation and signing or verification with SHA-256-based algorithms, so the full signature workflow can run directly in JavaScript. [web:65][web:66][web:70][web:85]
+            </div>
+          </section>
+          <aside class="result-stack">
+            <article class="result-card"><h3>SHA-256 Digest</h3><div class="mono" id="hashOutput">No hash generated yet.</div></article>
+            <article class="result-card"><h3>Public Key</h3><div class="mono" id="publicKeyOutput">Generate keys to view the public key.</div></article>
+            <article class="result-card"><h3>Private Key</h3><div class="mono" id="privateKeyOutput">Generate keys to view the private key.</div></article>
+            <article class="result-card"><h3>Signature</h3><div class="mono" id="signatureOutput">Sign the message to generate a signature.</div></article>
+            <article class="result-card"><h3>Verification Status</h3><div class="result-meta"><div class="mono" id="verifyOutput">No verification performed yet.</div><div class="mono" id="integrityOutput">Integrity check pending.</div></div></article>
+          </aside>
+        </div>
+      </section>
+    <section id="ala2" class="activity-section">
+        <div class="layout">
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Ala 2 — SHA Compare</h2>
+                <p>Compare the hashes of two similar messages to observe the avalanche effect.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="shaMessage1"><i data-lucide="file-text"></i> Input Message 1</label>
+              <textarea id="sigMovePlaceholder1">Hello World</textarea>
+            </div>
+            <div class="field">
+              <label for="shaMessage2"><i data-lucide="file-pen-line"></i> Input Message 2</label>
+              <small>Change one small character to observe avalanche effect.</small>
+              <textarea id="shaMessage2">Hello Wxrld</textarea>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="shaCompareBtn"><i data-lucide="cpu"></i> Compare Hashes</button>
+              <button class="btn btn-ghost" id="shaResetBtn"><i data-lucide="rotate-ccw"></i> Reset</button>
+            </div>
+            <div class="status info show" id="shaStatus"><i data-lucide="info"></i><span>Enter two similar inputs and compare hashes.</span></div>
+            <div class="footnote">
+              Secure hash algorithms supported by Web Crypto include SHA-1, SHA-256, and SHA-512 through `digest()`, and a tiny input change should produce a significantly different hash output due to the avalanche effect. [web:69][web:75][web:87]
+            </div>
+          </section>
+          <aside class="result-stack">
+            <article class="result-card"><h3>SHA-1</h3><div class="mono" id="sha1Out">No result yet.</div></article>
+            <article class="result-card"><h3>SHA-256</h3><div class="mono" id="sha256Out">No result yet.</div></article>
+            <article class="result-card"><h3>SHA-512</h3><div class="mono" id="sha512Out">No result yet.</div></article>
+            <article class="result-card"><h3>Avalanche Effect</h3><div class="result-meta-3"><div class="mono" id="diffSha1">SHA-1 diff pending.</div><div class="mono" id="diffSha256">SHA-256 diff pending.</div><div class="mono" id="diffSha512">SHA-512 diff pending.</div></div></article>
+          </aside>
+        </div>
+      </section>
+
+      <section id="ala3" class="activity-section">
+        <div class="layout">
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Ala 3 — HMAC MAC</h2>
+                <p>Create and verify a Message Authentication Code using a shared secret key.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="hmacMessage"><i data-lucide="mail"></i> Sender Message</label>
+              <textarea id="hmacMessage">Hello from sender to receiver</textarea>
+            </div>
+            <div class="field">
+              <label for="hmacSecret"><i data-lucide="key-round"></i> Shared Secret Key</label>
+              <input type="text" id="hmacSecret" value="gmiu_shared_secret_key" />
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="hmacGenerateBtn"><i data-lucide="shield-check"></i> Generate MAC</button>
+              <button class="btn btn-secondary" id="hmacVerifyBtn"><i data-lucide="badge-check"></i> Verify MAC</button>
+              <button class="btn btn-ghost" id="hmacTamperBtn"><i data-lucide="triangle-alert"></i> Tamper Message</button>
+              <button class="btn btn-ghost" id="hmacResetBtn"><i data-lucide="rotate-ccw"></i> Reset</button>
+            </div>
+            <div class="status info show" id="hmacStatus"><i data-lucide="info"></i><span>Generate an HMAC, then verify it with the same shared key.</span></div>
+            <div class="footnote">
+              HMAC can be created and verified with Web Crypto using `importKey()`, `sign()`, and `verify()` with the `HMAC` algorithm and SHA-256. Matching results demonstrate integrity and authentication when the same shared secret is used. [web:67][web:81][web:85][web:86]
+            </div>
+          </section>
+          <aside class="result-stack">
+            <article class="result-card"><h3>Generated MAC</h3><div class="mono" id="hmacOut">No MAC generated yet.</div></article>
+            <article class="result-card"><h3>Receiver Check</h3><div class="mono" id="hmacVerifyOut">Verification pending.</div></article>
+            <article class="result-card"><h3>Analysis</h3><div class="mono" id="hmacAnalysis">Integrity and authentication check pending.</div></article>
+          </aside>
+        </div>
+      </section>
+
+      </main>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let theme = 'dark';
+
+    function pulse(el) {
+      if (!el) return;
+      el.classList.remove('pulse');
+      void el.offsetWidth;
+      el.classList.add('pulse');
+      setTimeout(() => el.classList.remove('pulse'), 1400);
+    }
+
+    function setStatus(id, type, text, icon = 'info') {
+      const bar = $(id);
+      bar.className = `status show ${type}`;
+      bar.innerHTML = `<i data-lucide="${icon}"></i><span>${text}</span>`;
+      lucide.createIcons();
+    }
+
+    function bufferToHex(buffer) {
+      return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const chunk = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunk) binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+      return btoa(binary);
+    }
+
+    function base64ToUint8Array(base64) {
+      const binary = atob(base64);
+      const len = binary.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+      return bytes;
+    }
+
+    function textToBuffer(text) { return new TextEncoder().encode(text); }
+
+    async function digestHex(algorithm, text) {
+      const digest = await crypto.subtle.digest(algorithm, textToBuffer(text));
+      return bufferToHex(digest);
+    }
+
+    function hexToBits(hex) {
+      return hex.split('').map(x => parseInt(x, 16).toString(2).padStart(4, '0')).join('');
+    }
+
+    function diffBits(hexA, hexB) {
+      const a = hexToBits(hexA), b = hexToBits(hexB);
+      let diff = 0;
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) diff++;
+      return `${diff} / ${a.length} bits changed (${((diff / a.length) * 100).toFixed(2)}%)`;
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.activity-section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+      });
+    });
+
+    document.querySelector('[data-theme-toggle]').addEventListener('click', () => {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+      document.querySelector('[data-theme-toggle]').innerHTML = theme === 'dark' ? '<i data-lucide="moon-star"></i>' : '<i data-lucide="sun-medium"></i>';
+      lucide.createIcons();
+    });
+
+    $('shaCompareBtn').addEventListener('click', async () => {
+      const m1 = $('shaMessage1').value;
+      const m2 = $('shaMessage2').value;
+      if (!m1 || !m2) return setStatus('shaStatus', 'error', 'Please enter both messages.', 'circle-alert');
+      const sha1a = await digestHex('SHA-1', m1), sha1b = await digestHex('SHA-1', m2);
+      const sha256a = await digestHex('SHA-256', m1), sha256b = await digestHex('SHA-256', m2);
+      const sha512a = await digestHex('SHA-512', m1), sha512b = await digestHex('SHA-512', m2);
+      $('sha1Out').textContent = `Message 1: ${sha1a}\n\nMessage 2: ${sha1b}`;
+      $('sha256Out').textContent = `Message 1: ${sha256a}\n\nMessage 2: ${sha256b}`;
+      $('sha512Out').textContent = `Message 1: ${sha512a}\n\nMessage 2: ${sha512b}`;
+      $('diffSha1').textContent = diffBits(sha1a, sha1b);
+      $('diffSha256').textContent = diffBits(sha256a, sha256b);
+      $('diffSha512').textContent = diffBits(sha512a, sha512b);
+      ['sha1Out','sha256Out','sha512Out','diffSha1','diffSha256','diffSha512'].forEach(id => pulse($(id)));
+      setStatus('shaStatus', 'success', 'Hashes compared successfully. Avalanche effect displayed.', 'badge-check');
+    });
+
+    $('shaResetBtn').addEventListener('click', () => {
+      $('shaMessage1').value = 'Hello World';
+      $('shaMessage2').value = 'Hello Wxrld';
+      $('sha1Out').textContent = 'No result yet.';
+      $('sha256Out').textContent = 'No result yet.';
+      $('sha512Out').textContent = 'No result yet.';
+      $('diffSha1').textContent = 'SHA-1 diff pending.';
+      $('diffSha256').textContent = 'SHA-256 diff pending.';
+      $('diffSha512').textContent = 'SHA-512 diff pending.';
+      setStatus('shaStatus', 'info', 'Reset complete. Enter two similar inputs and compare hashes.', 'rotate-ccw');
+    });
+
+    let hmacSignatureHex = '';
+    async function importHmacKey(secret) {
+      return crypto.subtle.importKey('raw', textToBuffer(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+    }
+
+    $('hmacGenerateBtn').addEventListener('click', async () => {
+      const message = $('hmacMessage').value;
+      const secret = $('hmacSecret').value;
+      if (!message || !secret) return setStatus('hmacStatus', 'error', 'Message and secret key are required.', 'circle-alert');
+      const key = await importHmacKey(secret);
+      const sig = await crypto.subtle.sign('HMAC', key, textToBuffer(message));
+      hmacSignatureHex = bufferToHex(sig);
+      $('hmacOut').textContent = hmacSignatureHex;
+      $('hmacVerifyOut').textContent = 'MAC generated. Verification pending.';
+      $('hmacAnalysis').textContent = 'Sender created MAC using shared secret and message.';
+      ['hmacOut','hmacVerifyOut','hmacAnalysis'].forEach(id => pulse($(id)));
+      setStatus('hmacStatus', 'success', 'HMAC-SHA256 generated successfully.', 'shield-check');
+    });
+
+    $('hmacVerifyBtn').addEventListener('click', async () => {
+      const message = $('hmacMessage').value;
+      const secret = $('hmacSecret').value;
+      if (!hmacSignatureHex) return setStatus('hmacStatus', 'error', 'Generate the MAC first.', 'circle-alert');
+      const key = await importHmacKey(secret);
+      const ok = await crypto.subtle.verify('HMAC', key, base64ToUint8Array(btoa(String.fromCharCode(...Uint8Array.from(hmacSignatureHex.match(/.{1,2}/g).map(h => parseInt(h, 16)))))), textToBuffer(message)).catch(async () => {
+        const regenerated = await crypto.subtle.sign('HMAC', key, textToBuffer(message));
+        return bufferToHex(regenerated) === hmacSignatureHex;
+      });
+      $('hmacVerifyOut').textContent = ok ? 'VALID — Receiver verified the MAC successfully.' : 'INVALID — Verification failed.';
+      $('hmacAnalysis').textContent = ok ? 'Integrity preserved and shared-secret authentication confirmed.' : 'Message or secret key mismatch detected.';
+      ['hmacVerifyOut','hmacAnalysis'].forEach(id => pulse($(id)));
+      setStatus('hmacStatus', ok ? 'success' : 'error', ok ? 'MAC verification successful.' : 'MAC verification failed.', ok ? 'badge-check' : 'shield-x');
+    });
+
+    $('hmacTamperBtn').addEventListener('click', async () => {
+      if (!hmacSignatureHex) return setStatus('hmacStatus', 'error', 'Generate the MAC first.', 'circle-alert');
+      $('hmacMessage').value = $('hmacMessage').value + ' (modified)';
+      $('hmacVerifyOut').textContent = 'Message modified. Verify again to show failure.';
+      $('hmacAnalysis').textContent = 'Tampering changes the authenticated data and should invalidate the MAC.';
+      ['hmacVerifyOut','hmacAnalysis'].forEach(id => pulse($(id)));
+      setStatus('hmacStatus', 'info', 'Message tampered. Click Verify MAC now.', 'triangle-alert');
+    });
+
+    $('hmacResetBtn').addEventListener('click', () => {
+      hmacSignatureHex = '';
+      $('hmacMessage').value = 'Hello from sender to receiver';
+      $('hmacSecret').value = 'gmiu_shared_secret_key';
+      $('hmacOut').textContent = 'No MAC generated yet.';
+      $('hmacVerifyOut').textContent = 'Verification pending.';
+      $('hmacAnalysis').textContent = 'Integrity and authentication check pending.';
+      setStatus('hmacStatus', 'info', 'Reset complete. Generate an HMAC again.', 'rotate-ccw');
+    });
+
+    let keyPair = null;
+    let signatureBuffer = null;
+    let lastHash = null;
+
+    async function exportKeyToPem(key, type) {
+      const format = type === 'public' ? 'spki' : 'pkcs8';
+      const exported = await crypto.subtle.exportKey(format, key);
+      const exportedAsString = arrayBufferToBase64(exported);
+      const lines = exportedAsString.match(/.{1,64}/g).join('\n');
+      return type === 'public' ? `-----BEGIN PUBLIC KEY-----\n${lines}\n-----END PUBLIC KEY-----` : `-----BEGIN PRIVATE KEY-----\n${lines}\n-----END PRIVATE KEY-----`;
+    }
+
+    async function generateSigHash() {
+      const message = $('messageInput').value.trim();
+      if (!message) return setStatus('sigStatus', 'error', 'Please enter a message first.', 'circle-alert');
+      const digest = await crypto.subtle.digest('SHA-256', textToBuffer(message));
+      lastHash = bufferToHex(digest);
+      $('hashOutput').textContent = lastHash;
+      pulse($('hashOutput'));
+      setStatus('sigStatus', 'success', 'SHA-256 hash generated successfully.', 'badge-check');
+    }
+
+    $('generateBtn').addEventListener('click', async () => {
+      setStatus('sigStatus', 'info', 'Generating RSA key pair...', 'loader-circle');
+      keyPair = await crypto.subtle.generateKey({ name: 'RSA-PSS', modulusLength: 2048, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-256' }, true, ['sign','verify']);
+      $('publicKeyOutput').textContent = await exportKeyToPem(keyPair.publicKey, 'public');
+      $('privateKeyOutput').textContent = await exportKeyToPem(keyPair.privateKey, 'private');
+      pulse($('publicKeyOutput')); pulse($('privateKeyOutput'));
+      setStatus('sigStatus', 'success', 'RSA key pair generated successfully.', 'key-round');
+    });
+
+    $('hashBtn').addEventListener('click', generateSigHash);
+
+    $('signBtn').addEventListener('click', async () => {
+      const message = $('messageInput').value.trim();
+      if (!message) return setStatus('sigStatus', 'error', 'Enter a message before signing.', 'circle-alert');
+      if (!keyPair) return setStatus('sigStatus', 'error', 'Generate keys before signing.', 'circle-alert');
+      await generateSigHash();
+      signatureBuffer = await crypto.subtle.sign({ name: 'RSA-PSS', saltLength: 32 }, keyPair.privateKey, textToBuffer(message));
+      $('signatureOutput').textContent = arrayBufferToBase64(signatureBuffer);
+      $('verifyOutput').textContent = 'Signature created. Verification pending.';
+      $('integrityOutput').textContent = `Message digest: ${lastHash}`;
+      pulse($('signatureOutput')); pulse($('verifyOutput')); pulse($('integrityOutput'));
+      setStatus('sigStatus', 'success', 'Message signed using the private key.', 'pen-square');
+    });
+
+    async function verifySignature(useTampered = false) {
+      const message = $('messageInput').value.trim();
+      if (!message) return setStatus('sigStatus', 'error', 'Enter a message before verification.', 'circle-alert');
+      if (!keyPair || !signatureBuffer) return setStatus('sigStatus', 'error', 'Generate keys and sign the message first.', 'circle-alert');
+      const data = useTampered ? textToBuffer(message + ' (modified)') : textToBuffer(message);
+      const ok = await crypto.subtle.verify({ name: 'RSA-PSS', saltLength: 32 }, keyPair.publicKey, signatureBuffer, data);
+      $('verifyOutput').textContent = ok ? 'VALID — Signature verified with public key.' : 'INVALID — Signature verification failed.';
+      $('integrityOutput').textContent = useTampered ? 'Tamper test: modified message does not match the original signature.' : 'Integrity intact: message and signature match.';
+      pulse($('verifyOutput')); pulse($('integrityOutput'));
+      setStatus('sigStatus', ok ? 'success' : 'error', ok ? 'Verification successful.' : 'Verification failed after message modification.', ok ? 'shield-check' : 'shield-x');
+    }
+
+    $('verifyBtn').addEventListener('click', () => verifySignature(false));
+    $('tamperBtn').addEventListener('click', () => verifySignature(true));
+    $('resetBtn').addEventListener('click', () => {
+      keyPair = null; signatureBuffer = null; lastHash = null;
+      $('messageInput').value = 'Hello GMIU, this message is signed using RSA and SHA-256.';
+      $('hashOutput').textContent = 'No hash generated yet.';
+      $('publicKeyOutput').textContent = 'Generate keys to view the public key.';
+      $('privateKeyOutput').textContent = 'Generate keys to view the private key.';
+      $('signatureOutput').textContent = 'Sign the message to generate a signature.';
+      $('verifyOutput').textContent = 'No verification performed yet.';
+      $('integrityOutput').textContent = 'Integrity check pending.';
+      setStatus('sigStatus', 'info', 'Reset complete. Start again by generating the RSA key pair.', 'rotate-ccw');
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
